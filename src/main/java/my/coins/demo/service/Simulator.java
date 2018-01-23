@@ -1,6 +1,5 @@
 package my.coins.demo.service;
 
-import my.coins.demo.CoinAlgorithem;
 import my.coins.demo.ExchangeContext;
 
 import java.time.LocalDateTime;

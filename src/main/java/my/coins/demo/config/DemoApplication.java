@@ -1,4 +1,4 @@
-package my.coins.demo;
+package my.coins.demo.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
