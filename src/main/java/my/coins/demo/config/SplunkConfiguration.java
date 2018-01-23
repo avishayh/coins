@@ -12,14 +12,10 @@ import javax.annotation.PostConstruct;
 @Configuration
 public class SplunkConfiguration {
 
-
-	@PostConstruct
-	void init() {
-		HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_2);
-	}
-
 	@Bean
 	Service splunk() {
+		HttpService.setSslSecurityProtocol(SSLSecurityProtocol.TLSv1_2);
+
 		ServiceArgs loginArgs = new ServiceArgs();
 		loginArgs.setUsername("admin");
 		loginArgs.setPassword("changeme");

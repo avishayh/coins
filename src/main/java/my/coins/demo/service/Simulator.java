@@ -25,7 +25,7 @@ public class Simulator {
 	}
 
 	private void startSimulation() {
-		ExchangeContext coinContext = new ExchangeContext();
+		ExchangeContext coinContext = new ExchangeContext("");
 
 	}
 
