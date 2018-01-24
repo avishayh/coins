@@ -1,6 +1,7 @@
 package my.coins.demo.service;
 
 import com.splunk.*;
+import my.coins.demo.CoinUtil;
 import my.coins.demo.Constants;
 import my.coins.demo.ExchangeContext;
 import my.coins.demo.Repository;
@@ -14,29 +15,27 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.List;
 
 
 @Component
 public class TickerService {
 
-	private final Service service;
-	private final Repository repository;
+	private final Service splunkService;
 
-	public TickerService(Service service, Repository repository) {
-		this.service = service;
-		this.repository = repository;
+	public TickerService(Service splunkService) {
+		this.splunkService = splunkService;
 	}
 
 	public Repository getRepository() {
 
+		Repository repository = new Repository();
 		try {
 			JobExportArgs args = new JobExportArgs();
 			args.setEarliestTime("-2d");
 			args.setLatestTime("now");
 			args.setOutputMode(JobExportArgs.OutputMode.JSON);
 
-			InputStream results = service.export(Constants.GET_TICKERS, args);
+			InputStream results = splunkService.export(Constants.GET_TICKERS, args);
 
 			ResultsReaderJson readerJson = new ResultsReaderJson(results);
 			readerJson.iterator().forEachRemaining(event -> {
@@ -48,7 +47,7 @@ public class TickerService {
 				Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
 
 				Ticker ticker = new Ticker.Builder()
-						.currencyPair(getCurrencyPair(event))
+						.currencyPair(CoinUtil.getCurrencyPair(event.get("currencyPair")))
 						.ask(toBigDecimal(event, "ask"))
 						.bid(toBigDecimal(event, "bid"))
 						.high(toBigDecimal(event, "high"))
@@ -60,26 +59,14 @@ public class TickerService {
 						.timestamp(date)
 						.build();
 
-
 				exchange.addTicker(ticker, time);
 
-				System.out.println("exchange = " + exchange);
 			});
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
-	}
-
-	private CurrencyPair getCurrencyPair(Event event) {
-		String currencyPair = event.get("currencyPair");
-		if (currencyPair.length() == 6) {
-			return new CurrencyPair(
-					currencyPair.substring(0, 3),
-					currencyPair.substring(3, 6));
-		}
-		return null;
+		return repository;
 	}
 
 	private BigDecimal toBigDecimal(Event event, String key) {

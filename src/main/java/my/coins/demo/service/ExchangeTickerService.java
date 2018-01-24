@@ -1,5 +1,6 @@
 package my.coins.demo.service;
 
+import my.coins.demo.CoinUtil;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.knowm.xchange.Exchange;
 import org.knowm.xchange.binance.dto.marketdata.BinanceSymbolPrice;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
+
+import static my.coins.demo.CoinUtil.*;
 
 @Service
 public class ExchangeTickerService {
@@ -51,10 +54,5 @@ public class ExchangeTickerService {
         return System.err.printf("exchange=%s %s %n", exchange.getExchangeSpecification().getExchangeName(), ExceptionUtils.getRootCauseMessage(e));
     }
 
-    private String toStringSymbol(String symbol) {
-        return symbol
-                .replace("USDT","USD")
-                .replace("/","");
-    }
 
 }

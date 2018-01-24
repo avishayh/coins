@@ -1,15 +1,15 @@
 package my.coins.demo;
 
 import com.google.common.collect.Maps;
-import org.springframework.stereotype.Component;
+import org.knowm.xchange.currency.CurrencyPair;
+import org.knowm.xchange.dto.marketdata.Ticker;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@Component
 public class Repository {
 
 	private Map<String, ExchangeContext> exchanges = Maps.newConcurrentMap();
-
 
 	public ExchangeContext getExchange(String name) {
 
@@ -22,4 +22,10 @@ public class Repository {
 	}
 
 
+	public Map<String, Ticker> currentTickerByExchange(CurrencyPair currencyPair) {
+		return exchanges.values()
+				.stream()
+				.collect(Collectors.toMap(ExchangeContext::getName, x -> x.getCurrentTicker(currencyPair)));
+
+	}
 }
