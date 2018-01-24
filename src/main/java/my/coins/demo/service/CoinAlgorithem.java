@@ -1,7 +1,7 @@
 package my.coins.demo.service;
 
-import my.coins.demo.ExchangeContext;
+import my.coins.demo.Repository;
 
 public interface CoinAlgorithem {
-	void calculate(ExchangeContext coinContext);
+	void calculate(Repository coinContext);
 }

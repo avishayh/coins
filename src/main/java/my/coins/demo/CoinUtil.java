@@ -6,6 +6,8 @@ import com.google.common.cache.LoadingCache;
 import com.splunk.Event;
 import org.knowm.xchange.currency.CurrencyPair;
 
+import java.text.SimpleDateFormat;
+
 public final class CoinUtil {
 
 	private static final LoadingCache<String, CurrencyPair> currencies = CacheBuilder.newBuilder().build(new CacheLoader<String, CurrencyPair>() {
@@ -28,11 +30,9 @@ public final class CoinUtil {
 		return currencies.getUnchecked(symbol);
 	}
 
-
 	public static String toStringSymbol(String symbol) {
 		return symbol
 				.replace("USDT", "USD")
 				.replace("/", "");
 	}
-
 }

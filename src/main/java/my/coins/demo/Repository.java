@@ -22,7 +22,7 @@ public class Repository {
 	}
 
 
-	public Map<String, Ticker> currentTickerByExchange(CurrencyPair currencyPair) {
+	public Map<String, Ticker> currentTickerInAllExchanges(CurrencyPair currencyPair) {
 		return exchanges.values()
 				.stream()
 				.collect(Collectors.toMap(ExchangeContext::getName, x -> x.getCurrentTicker(currencyPair)));
