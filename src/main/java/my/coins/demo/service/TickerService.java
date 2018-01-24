@@ -7,6 +7,8 @@ import my.coins.demo.ExchangeContext;
 import my.coins.demo.Repository;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.Ticker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ import java.util.Date;
 @Component
 public class TickerService {
 
+	private static final Logger logger = LoggerFactory.getLogger(TickerService.class);
+
 	private final Service splunkService;
 
 	public TickerService(Service splunkService) {
@@ -27,15 +31,21 @@ public class TickerService {
 	}
 
 	public Repository getRepository() {
+		String query = Constants.GET_TICKERS;
+		String earliestTime = "-2d";
+		String latestTime = "now";
+		return buildRepository(query, earliestTime, latestTime);
+	}
 
+	private Repository buildRepository(String query, String earliestTime, String latestTime) {
 		Repository repository = new Repository();
 		try {
 			JobExportArgs args = new JobExportArgs();
-			args.setEarliestTime("-2d");
-			args.setLatestTime("now");
+			args.setEarliestTime(earliestTime);
+			args.setLatestTime(latestTime);
 			args.setOutputMode(JobExportArgs.OutputMode.JSON);
 
-			InputStream results = splunkService.export(Constants.GET_TICKERS, args);
+			InputStream results = splunkService.export(query, args);
 
 			ResultsReaderJson readerJson = new ResultsReaderJson(results);
 			readerJson.iterator().forEachRemaining(event -> {
@@ -64,7 +74,7 @@ public class TickerService {
 			});
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("failed ... ", e);
 		}
 		return repository;
 	}

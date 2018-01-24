@@ -3,6 +3,7 @@ package my.coins.demo.service;
 import my.coins.demo.ExchangeContext;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class Simulator {
 
@@ -30,7 +31,7 @@ public class Simulator {
 	}
 
 	private void nextStep() {
-		currentContext.setCurrentTime(LocalDateTime.now());
+		currentContext.setCurrentTime(new Date());
 	}
 
 	public boolean isSimulationRunning() {
