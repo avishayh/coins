@@ -27,6 +27,7 @@ public class SimulatorTest {
 	public void runFirstSimulator() {
 		Repository repository = tickerService.getRepository();
 
+
 		Simulator simulator = Simulator.newBuilder()
 				.simulatorTime(DateUtil.getDate("22/01/2018"))
 				.build(repository);
