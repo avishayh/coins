@@ -9,6 +9,9 @@ public final class DateUtil {
 	private static final ThreadLocal<SimpleDateFormat> DATE_FORMAT =
 			ThreadLocal.withInitial(() -> new SimpleDateFormat("dd/MM/yyyy"));
 
+	private static final ThreadLocal<SimpleDateFormat> DATE_AND_TIME_FORMAT =
+			ThreadLocal.withInitial(() -> new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
+
 	private static final ThreadLocal<Date> simulatorTimestamp = new ThreadLocal<>();
 
 	private DateUtil() {
@@ -23,6 +26,11 @@ public final class DateUtil {
 		simulatorTimestamp.set(date);
 
 	}
+
+	public static String toString(Date date) {
+		return DATE_AND_TIME_FORMAT.get().format(date);
+	}
+
 
 	public static Date getDate(String date) {
 		try {

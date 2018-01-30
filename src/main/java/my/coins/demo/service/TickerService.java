@@ -32,12 +32,13 @@ public class TickerService {
 
 	public Repository getRepository() {
 		String query = Constants.GET_TICKERS;
-		String earliestTime = "-2d";
+		String earliestTime = "-1y";
 		String latestTime = "now";
 		return buildRepository(query, earliestTime, latestTime);
 	}
 
 	private Repository buildRepository(String query, String earliestTime, String latestTime) {
+		logger.info(String.format("Running query to splunk.\n %s from %s to %s", query, earliestTime, latestTime));
 		Repository repository = new Repository();
 		try {
 			JobExportArgs args = new JobExportArgs();
@@ -47,6 +48,7 @@ public class TickerService {
 
 			InputStream results = splunkService.export(query, args);
 
+			logger.info(String.format("Evaluating results, from %s to %s", earliestTime, latestTime));
 			ResultsReaderJson readerJson = new ResultsReaderJson(results);
 			readerJson.iterator().forEachRemaining(event -> {
 
@@ -76,6 +78,7 @@ public class TickerService {
 		} catch (IOException e) {
 			logger.error("failed ... ", e);
 		}
+		logger.info("Finished building repository");
 		return repository;
 	}
 
